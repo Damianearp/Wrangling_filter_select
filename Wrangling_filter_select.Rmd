@@ -22,6 +22,7 @@ data(movies)
 
 It's always a good idea to do some recon work first. What do the data look like? How many observations and variables do we have? What are the variable names?
 
+From what we're observing, we have different titles, genre's, length ratings and even reviews on the movies. 
 
 ```{r}
 # View() opens the data in another window. 'head(movies)' will show the first few rows.
@@ -34,18 +35,52 @@ dim(movies)     # always rows x columns
 names(movies)   # a good way to keep track of variable names for later use
 ```
 
+```{r}
+mean(movies$rating)
+```
+
+Above we can safely conclude that our mean is 5.93!
+
+```{r}
+median(movies$rating)
+```
+
+Our Median budget is going to be 6.1!
+
+```{r}
+newdata<-na.omit(movies$budget)
+```
+
+```{r}
+median(newdata)
+```
+
+```{r}
+newdata2<-na.omit(movies$length)
+```
+
+(newdata2 represents the movie length over 60 minutes)
+
+```{r}
+Smovies<-sort(movies$length)
+```
+
+```{r}
+print(Smovies>114)
+```
+
 
 ## Motivation for Wrangling
 
 Now that we have a sense of our data, we can start to dig a little deeper into the details of things. One of the main reasons data wrangling is so important to statisticians and data scientists is that we often collect waaaay more data than we actually need to answer a particular question. You may want to ask the following questions:
 
-- What is the average movie rating?
+- What is the average movie rating? The movie rating average is 5.93
 
-- What is the median budget for a movie?
+- What is the median budget for a movie? our Median budget is 3,000,000
 
 But after looking at all of the movies recorded here, the more precise questions might turn out to be:
 
-- What is the average rating *of movies longer than 60 minutes?*
+- What is the average rating *of movies longer than 60 minutes?* 
 
 - What is the median budget *of animated films compared to documentaries?*
 
@@ -202,13 +237,19 @@ See if you can answer these questions:
 1. How many movies were released in 1995?
 
 ```{r}
-
+movies1995<-movies%>%
+  filter(year==1995)%>%
+  drop_na(year)%>%
+  select(title,year)
 ```
+
 
 2. Which Comedies with an MPAA rating, over 120 minutes have a rating above 8?
 
 ```{r}
-
+movies_comedies_rating_120_8 <- movies %>%
+  filter(Comedy == 1 & length >= 120 & rating >= 8.0 & mpaa %in% c("R", "PG-13","PG", "G"))
+movies_comedies_rating_120_8
 ```
 
 3. Create a subset of only Harry Potter movies with the title, rating, budget, and votes. Which movies are included in this data? Which is highest rated? Which has the most votes on imdb.com?
